@@ -1,0 +1,355 @@
+—··—··——·
+function renderSemGrid(){
+  const grid = document.getElementById('semGrid');
+    grid.innerHTML='';
+      state.terms.forEach(term=>{
+          const isSem = term.type==='fall'||term.type==='spring';
+              const cred = termCredits(term.id);
+                  let flagHtml = '';
+                      if(isSem){
+                            if(cred>20) flagHtml = `<span class="flag flag-danger">over max</span>span>`;
+                                  else if(cred>18) flagHtml = `<span class="flag flag-warn">overload</span>span>`;
+                                        else flagHtml = `<span class="flag flag-ok">ok</span>span>`;
+                                            }
+                                                const card = document.createElement('div');
+                                                    card.className = 'sem-card';
+                                                        card.dataset.term = term.id;
+                                                            const courses = state.courses.filter(c=>c.termId===term.id);
+                                                                card.innerHTML = `
+                                                                      <div class="sem-head">
+                                                                                <div>
+                                                                                            <h3>${term.label}</h3>
+                                                                                          <div class="sem-type">${isSem?'Semester':(term.type==='summer'?'Summer session':'J-term session')}</div>
+                                                                                </div>
+                                                                              <div style="display:flex; align-items:flex-start; gap:6px;">
+                                                                                        <div class="sem-cred">
+                                                                                                    <div class="n">${cred}</div>
+                                                                                                    ${flagHtml}
+                                                                                        </div>
+                                                                                        <button class="sem-remove" data-remove-term="${term.id}" title="Remove semester">&times;</button>button>
+                                                                              </div>
+                                                                      </div>
+      <ul class="course-list" data-dropzone="${term.id}">
+              ${courses.map(cs=>{
+                const cat = CATEGORIES[cs.category];
+                return `<li class="course-row ${cs.status}" draggable="true" style="--c:${cat?cat.color:'#999'}" data-course="${cs.id}">
+                  <div class="cr-dot"></div>
+                  <div class="cr-body">
+                                ${cs.code?`<div class="cr-code">${cs.code}</div>`:''}
+                                <div class="cr-name">${cs.name}</div>
+                                <div class="cr-status">${statusBadge(cs)} · ${cs.category?categoryFullLabel(cs.category):''}</div>
+                  </div>
+                  <div class="cr-credits">${cs.credits}</div>
+                </li>li>`;
+              }).join('')}
+      </ul>ul>
+      <button class="sem-add" data-add-course="${term.id}">+ Add course</button>button>
+    `;
+    grid.appendChild(card);
+  });
+  const addCard = document.createElement('div');
+  addCard.className='add-sem-card';
+  addCard.id='addSemCard';
+  addCard.textContent='+ Add semester / session';
+  grid.appendChild(addCard);
+
+  attachDragHandlers();
+}
+
+function attachDragHandlers(){
+  document.querySelectorAll('.course-row').forEach(row=>{
+    row.addEventListener('dragstart', e=>{
+      draggedCourseId = row.dataset.course;
+      row.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', row.dataset.course);
+    });
+    row.addEventListener('dragend', ()=>{
+      row.classList.remove('dragging');
+      draggedCourseId = null;
+    });
+  });
+  document.querySelectorAll('.sem-card').forEach(card=>{
+    card.addEventListener('dragover', e=>{
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      card.classList.add('drag-over');
+    });
+    card.addEventListener('dragleave', ()=>{
+      card.classList.remove('drag-over');
+    });
+    card.addEventListener('drop', e=>{
+      e.preventDefault();
+      card.classList.remove('drag-over');
+      const courseId = draggedCourseId || e.dataTransfer.getData('text/plain');
+      const targetTermId = card.dataset.term;
+      const course = state.courses.find(c=>c.id===courseId);
+      if(course && targetTermId){
+        course.termId = targetTermId;
+        render();
+      }
+    });
+  });
+}
+
+function renderSchedTermOptions(){
+  const sel = document.getElementById('schedTermSelect');
+  const prev = sel.value;
+  sel.innerHTML = state.terms.map(t=>`<option value="${t.id}">${t.label}</option>option>`).join('');
+  if(prev && state.terms.some(t=>t.id===prev)) sel.value = prev;
+}
+
+function timeToRow(t){
+  if(!t) return null;
+  const [h,m] = t.split(':').map(Number);
+  return (h*60+m);
+}
+
+function renderSchedule(){
+  const termId = document.getElementById('schedTermSelect').value;
+  const container = document.getElementById('schedContainer');
+  const courses = state.courses.filter(c=>c.termId===termId && c.days && c.days.length && c.start && c.end);
+  if(!courses.length){
+    container.innerHTML = `<div class="no-schedule-note">No timed courses yet for this semester. Add meeting days/times when editing a course to see it here.</div>`;
+    return;
+  }
+  const startHour = 8, endHour = 21;
+  const totalMin = (endHour-startHour)*60;
+  const pxPerMin = 1.6;
+  let hourRows = '';
+  for(let h=startHour; h<=endHour; h++){
+      hourRows += `<div class="tcell" style="height:${60*pxPerMin}px;">${h>12?(h-12)+'pm':(h===12?'12pm':h+'am')}</div>`;
+    }
+    let cols = '';
+    DAYS.forEach(day=>{
+      const dayCourses = courses.filter(c=>c.days.includes(day));
+      let blocks = '';
+      dayCourses.forEach(cs=>{
+        const cat = CATEGORIES[cs.category];
+        const sM = timeToRow(cs.start) - startHour*60;
+        const eM = timeToRow(cs.end) - startHour*60;
+        const top = Math.max(0,sM)*pxPerMin;
+        const height = Math.max(20,(eM-sM))*pxPerMin;
+        blocks += `<div class="sched-block" style="--c:${cat?cat.color:'#999'}; top:${top}px; height:${height}px;" data-course="${cs.id}">
+                <div class="b-name">${cs.name}</div>
+                <div class="b-code">${cs.start}–${cs.end}</div>
+        </div>`;
+      });
+      cols += `<div class="sched-col" style="height:${totalMin*pxPerMin}px;">${blocks}</div>`;
+    });
+    container.innerHTML = `
+      <div class="sched-grid" style="grid-template-rows:32px 1fr;">
+            <div class="hcell"></div>
+            ${DAYS.map(d=>`<div class="hcell">${d}</div>`).join('')}
+            <div>${hourRows}</div>
+            ${cols}
+      </div>
+    `;
+    container.querySelectorAll('[data-course]').forEach(el=>{
+      el.addEventListener('click', ()=>openCourseModal(el.dataset.course));
+    });
+  }
+  
+  const overlay = document.getElementById('courseOverlay');
+  const form = document.getElementById('courseForm');
+  
+  function categoryFullLabel(key){
+    const group = Object.values(GROUPS).find(g=>g.children.includes(key));
+    const base = CATEGORIES[key].label;
+    return group ? `${group.label} — ${base}` : base;
+  }
+  function populateCategorySelect(){
+    const sel = document.getElementById('f_category');
+    sel.innerHTML = Object.keys(CATEGORIES).map(k=>`<option value="${k}">${categoryFullLabel(k)}</option>option>`).join('');
+  }
+  function populateTermSelect(){
+    const sel = document.getElementById('f_term');
+    sel.innerHTML = state.terms.map(t=>`<option value="${t.id}">${t.label}</option>option>`).join('');
+  }
+  function populateDaysCheck(selectedDays){
+    const wrap = document.getElementById('daysCheck');
+    wrap.innerHTML = DAYS.map(d=>`<label><input type="checkbox" value="${d}" ${selectedDays&&selectedDays.includes(d)?'checked':''}> ${d}</label>`).join('');
+  }
+  
+  function refreshSubcategoryField(selectedSubcat){
+    const catKey = document.getElementById('f_category').value;
+    const wrap = document.getElementById('f_subcategory_wrap');
+    const sel = document.getElementById('f_subcategory');
+    const areas = SUBCATS[catKey];
+    if(areas){
+      wrap.style.display='block';
+      sel.innerHTML = '<option value="">General / other</option>option>' + areas.map(a=>`<option value="${a}">${a}</option>option>`).join('');
+      sel.value = selectedSubcat || '';
+    } else {
+      wrap.style.display='none';
+      sel.innerHTML = '';
+    }
+    refreshCourseNameSuggestions();
+  }
+  function refreshCourseNameSuggestions(){
+    const subcat = document.getElementById('f_subcategory').value;
+    const list = document.getElementById('courseNameList');
+    const options = COURSE_CATALOG[subcat] || [];
+    list.innerHTML = options.map(o=>`<option value="${o}">`).join('');
+  }
+  document.getElementById('f_category').addEventListener('change', ()=>refreshSubcategoryField());
+  document.getElementById('f_subcategory').addEventListener('change', refreshCourseNameSuggestions);
+  
+  function openCourseModal(courseId, defaultTermId){
+    populateCategorySelect();
+    populateTermSelect();
+    const course = courseId ? state.courses.find(c=>c.id===courseId) : null;
+    document.getElementById('courseModalTitle').textContent = course ? 'Edit course' : 'Add course';
+    document.getElementById('courseId').value = course ? course.id : '';
+    document.getElementById('f_code').value = course ? course.code||'' : '';
+    document.getElementById('f_name').value = course ? course.name||'' : '';
+    document.getElementById('f_credits').value = course ? course.credits : 4;
+    document.getElementById('f_category').value = course ? course.category : 'ima_elective';
+    document.getElementById('f_term').value = course ? course.termId : (defaultTermId||state.terms[0].id);
+    document.getElementById('f_status').value = course ? course.status : 'planned';
+    refreshSubcategoryField(course ? course.subcategory : '');
+    populateDaysCheck(course ? course.days : []);
+    document.getElementById('f_start').value = course && course.start ? course.start : '';
+    document.getElementById('f_end').value = course && course.end ? course.end : '';
+    document.getElementById('f_notes').value = course && course.notes ? course.notes : '';
+    document.getElementById('deleteCourseBtn').style.display = course ? 'inline-block' : 'none';
+    overlay.style.display='flex';
+  }
+  function closeCourseModal(){ overlay.style.display='none'; }
+  
+  form.addEventListener('submit', e=>{
+    e.preventDefault();
+    const id = document.getElementById('courseId').value;
+    const days = Array.from(document.querySelectorAll('#daysCheck input:checked')).map(i=>i.value);
+    const data = {
+      code: document.getElementById('f_code').value.trim(),
+      name: document.getElementById('f_name').value.trim(),
+      credits: Number(document.getElementById('f_credits').value)||0,
+      category: document.getElementById('f_category').value,
+      subcategory: SUBCATS[document.getElementById('f_category').value] ? document.getElementById('f_subcategory').value : '',
+      termId: document.getElementById('f_term').value,
+      status: document.getElementById('f_status').value,
+      days: days,
+      start: document.getElementById('f_start').value,
+      end: document.getElementById('f_end').value,
+      notes: document.getElementById('f_notes').value.trim()
+    };
+    if(id){
+      const idx = state.courses.findIndex(c=>c.id===id);
+      state.courses[idx] = {...state.courses[idx], ...data};
+    } else {
+      state.courses.push({id:c(), ...data});
+    }
+    closeCourseModal();
+    render();
+  });
+  document.getElementById('cancelCourseBtn').addEventListener('click', closeCourseModal);
+  document.getElementById('deleteCourseBtn').addEventListener('click', ()=>{
+    const id = document.getElementById('courseId').value;
+    if(id && confirm('Delete this course?')){
+      state.courses = state.courses.filter(c=>c.id!==id);
+      closeCourseModal();
+      render();
+    }
+  });
+  
+  const termOverlay = document.getElementById('termOverlay');
+  document.getElementById('termForm').addEventListener('submit', e=>{
+    e.preventDefault();
+    const label = document.getElementById('t_label').value.trim();
+    const type = document.getElementById('t_type').value;
+    if(label){
+      state.terms.push({id:c(), label, type});
+      closeTermModal();
+      render();
+    }
+  });
+  document.getElementById('cancelTermBtn').addEventListener('click', closeTermModal);
+  function openTermModal(){
+    document.getElementById('t_label').value='';
+    document.getElementById('t_type').value='fall';
+    termOverlay.style.display='flex';
+  }
+  function closeTermModal(){ termOverlay.style.display='none'; }
+  
+  document.getElementById('semGrid').addEventListener('click', e=>{
+    const addBtn = e.target.closest('[data-add-course]');
+    if(addBtn){ openCourseModal(null, addBtn.dataset.addCourse); return; }
+    const removeBtn = e.target.closest('[data-remove-term]');
+    if(removeBtn){
+      const termId = removeBtn.dataset.removeTerm;
+      const hasCourses = state.courses.some(c=>c.termId===termId);
+      const msg = hasCourses ? 'This semester has courses in it. Remove it and all its courses?' : 'Remove this semester?';
+      if(confirm(msg)){
+        state.courses = state.courses.filter(c=>c.termId!==termId);
+        state.terms = state.terms.filter(t=>t.id!==termId);
+        render();
+      }
+      return;
+    }
+    const row = e.target.closest('[data-course]');
+    if(row){ openCourseModal(row.dataset.course); return; }
+    if(e.target.id==='addSemCard'){ openTermModal(); return; }
+  });
+  
+  document.querySelectorAll('.toggle-group button').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.toggle-group button').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      currentView = btn.dataset.view;
+      document.getElementById('gridView').style.display = currentView==='grid' ? 'block':'none';
+      document.getElementById('scheduleView').style.display = currentView==='schedule' ? 'block':'none';
+      if(currentView==='schedule') renderSchedule();
+    });
+  });
+  document.getElementById('schedTermSelect').addEventListener('change', renderSchedule);
+  document.getElementById('semTargetSelect').addEventListener('change', e=>{
+    state.student.semTarget = Number(e.target.value);
+    renderMasthead();
+  });
+  
+  document.getElementById('exportBtn').addEventListener('click', ()=>{
+    const blob = new Blob([JSON.stringify(state,null,2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'graduation-plan.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+  document.getElementById('importBtn').addEventListener('click', ()=>{
+    document.getElementById('importInput').click();
+  });
+  document.getElementById('importInput').addEventListener('change', e=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = evt=>{
+      try{
+        const parsed = JSON.parse(evt.target.result);
+        if(parsed.terms && parsed.courses && parsed.student){
+          state = parsed;
+          render();
+        } else {
+          alert('This file does not look like a graduation-plan export.');
+        }
+      }catch(err){
+        alert('Could not read that file: '+err.message);
+      }
+    };
+    reader.readAsText(file);
+    e.target.value='';
+  });
+  document.getElementById('resetBtn').addEventListener('click', ()=>{
+    if(confirm('Reset to the originally seeded plan? Any manual edits will be lost (export first if you want to keep them).')){
+      state = JSON.parse(JSON.stringify(DEFAULT_STATE));
+      render();
+    }
+  });
+  
+  render();
+    </option>script>
+  </body>
+  </html>
+  </label></h3>
+                                                                                </div>
