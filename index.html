@@ -20,7 +20,7 @@
     --ima-elective:#E9A23B;
     --las-core:#E63946;
     --las-elective:#8E5DB8;
-    --free:#6C757D;
+    --free:#E91E8C;
 
     --danger:#c0392b;
     --danger-bg:#fdeeec;
@@ -119,7 +119,6 @@
     border-radius:0; background:transparent;
   }
   /* ---------- AREA SUMMARY (nested under its parent meter) ---------- */
-  .footnote{font-size:11.5px; color:var(--text-faint); margin:14px 0 22px; line-height:1.5;}
   .area-details{overflow:hidden;}
   .area-details > summary{
     cursor:pointer; list-style:none; display:flex; align-items:center; gap:10px;
@@ -155,13 +154,14 @@
   .area-course-list.flush{padding:0 0 2px;}
   .area-course{
     display:flex; justify-content:space-between; gap:8px; align-items:baseline;
-    padding:6px 8px; border-radius:6px; background:var(--surface-2); font-size:11px;
-    cursor:pointer; border:1px solid transparent; transition:background .12s, border-color .12s;
+    padding:6px 8px 6px 10px; border-radius:6px; background:var(--surface-2); font-size:11px;
+    cursor:pointer; border:1px solid transparent; border-left:3px solid var(--c, var(--text-faint));
+    transition:background .12s, border-color .12s;
   }
   .group-body > .area-course,
   .child-meter .area-details .area-course{background:#fff;}
-  .group-body > .area-course{border:1px solid var(--border-soft);}
-  .area-course:hover{background:#f2f3f5; border-color:var(--border);}
+  .group-body > .area-course{border:1px solid var(--border-soft); border-left:3px solid var(--c, var(--text-faint));}
+  .area-course:hover{background:#f2f3f5; border-color:var(--border); border-left-color:var(--c, var(--text-faint));}
   .area-course .ac-name{color:var(--text); line-height:1.3; min-width:0;}
   .area-course .ac-meta{color:var(--text-faint); font-size:10px; white-space:nowrap; flex-shrink:0;}
   .area-empty{font-size:10.5px; color:var(--text-faint); padding:2px 9px 8px;}
@@ -231,31 +231,29 @@
   .sem-head .sem-type{font-size:11px; color:var(--text-soft); margin-top:2px;}
   .sem-cred{text-align:right;}
   .sem-cred .n{font-size:17px; font-weight:600;}
-  .sem-cred .flag{display:inline-block; font-size:10px; padding:1px 7px; margin-top:4px; border-radius:20px;}
-  .sem-card.collapsed .sem-cred .flag{margin-top:2px;}
-  .flag-ok{background:var(--ok-bg); color:var(--ok);}
-  .flag-warn{background:var(--warn-bg); color:var(--warn);}
-  .flag-danger{background:var(--danger-bg); color:var(--danger);}
   .sem-toggle{
-    width:26px; height:26px; flex-shrink:0; margin-top:0;
+    width:22px; height:22px; flex-shrink:0; margin-top:0;
     display:inline-flex; align-items:center; justify-content:center;
-    background:var(--surface-2); border:1px solid var(--border); border-radius:6px;
-    color:var(--text-soft); cursor:pointer; font-size:12px; line-height:1;
-    font-family:inherit; padding:0;
-    transition:background .12s, border-color .12s, color .12s, transform .15s;
+    background:none; border:none; border-radius:0; padding:0;
+    color:var(--text-faint); cursor:pointer; font-family:inherit;
+    transition:color .12s, transform .15s;
   }
-  .sem-toggle:hover{color:var(--text); border-color:var(--text-faint); background:#f2f3f5;}
+  .sem-toggle:hover{color:var(--text);}
+  .sem-toggle svg{display:block;}
   .sem-card.collapsed .sem-toggle{transform:rotate(-90deg);}
 
   .course-list{list-style:none; margin:0; padding:10px 10px 6px; flex:1; min-height:24px;}
   .course-row{
-    display:flex; align-items:flex-start; gap:8px; padding:8px 9px; border-radius:7px;
+    display:flex; align-items:flex-start; gap:8px; padding:8px 9px 8px 10px; border-radius:7px;
     background:var(--surface-2); margin-bottom:6px; cursor:grab; border:1px solid transparent;
+    border-left:3px solid var(--c, var(--text-faint));
     transition:background .12s, border-color .12s;
   }
-  .course-row:hover{background:#f2f3f5; border-color:var(--border);}
+  .course-row:hover{background:#f2f3f5; border-color:var(--border); border-left-color:var(--c, var(--text-faint));}
   .course-row.dragging{opacity:.4;}
-  .course-row .cr-dot{width:6px; align-self:stretch; border-radius:4px; background:var(--c); flex-shrink:0; margin-top:2px; min-height:16px;}
+  .course-row.drop-before{box-shadow:inset 0 2px 0 var(--text);}
+  .course-row.drop-after{box-shadow:inset 0 -2px 0 var(--text);}
+  .course-row .cr-dot{display:none;}
   .course-row .cr-body{flex:1; min-width:0;}
   .course-row .cr-code{font-size:10.5px; color:var(--text-faint);}
   .course-row .cr-name{font-size:12.5px; line-height:1.3;}
@@ -266,8 +264,22 @@
   .sem-add{width:100%; background:none; border:none; border-top:1px solid var(--border-soft); padding:9px 14px;
     text-align:left; font-size:12.5px; color:var(--text-soft); cursor:pointer; font-family:inherit; border-radius:0 0 var(--radius) var(--radius);}
   .sem-add:hover{color:var(--text); background:var(--surface-2);}
-  .sem-remove{background:none; border:none; color:var(--text-faint); cursor:pointer; font-size:16px; line-height:1; padding:2px 4px;}
+  .sem-remove,.sem-edit{
+    background:none; border:none; color:var(--text-faint); cursor:pointer;
+    font-size:16px; line-height:1; padding:2px 4px; font-family:inherit;
+  }
+  .sem-edit{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:22px; height:22px; padding:0;
+  }
+  .sem-edit svg{display:block;}
+  .sem-edit:hover{color:var(--text);}
   .sem-remove:hover{color:var(--danger);}
+  .sem-title-btn{
+    background:none; border:none; padding:0; margin:0; text-align:left; cursor:pointer;
+    font:inherit; color:inherit; width:100%;
+  }
+  .sem-title-btn:hover h3{text-decoration:underline; text-decoration-color:var(--text-faint);}
 
   .add-sem-card{
     border:1px dashed var(--border); border-radius:var(--radius);
@@ -277,20 +289,21 @@
   .add-sem-card:hover{color:var(--text); border-color:var(--text-faint); background:var(--surface-2);}
 
   /* ---------- SCHEDULE VIEW ---------- */
-  #scheduleView .sched-controls{display:flex; gap:10px; align-items:center; margin-bottom:16px;}
+  #scheduleView .sched-controls{display:flex; gap:10px; align-items:center; margin-bottom:10px;}
   #scheduleView select{font-size:13px; border:1px solid var(--border); border-radius:6px; padding:6px 8px; font-family:inherit;}
   .sched-grid{
-    display:grid; grid-template-columns:56px repeat(7,1fr); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; background:var(--surface);
+    display:grid; grid-template-columns:40px repeat(5,1fr); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; background:var(--surface);
   }
-  .sched-grid .hcell{border-bottom:1px solid var(--border-soft); border-right:1px solid var(--border-soft); padding:8px 4px; font-size:11px; text-align:center; color:var(--text-soft); font-weight:600;}
-  .sched-grid .tcell{border-right:1px solid var(--border-soft); border-bottom:1px solid var(--border-soft); font-size:10px; color:var(--text-faint); text-align:right; padding:2px 6px;}
-  .sched-col{position:relative; border-right:1px solid var(--border-soft);}
+  .sched-grid .hcell{border-bottom:1px solid var(--border-soft); border-right:1px solid var(--border-soft); padding:5px 2px; font-size:10px; text-align:center; color:var(--text-soft); font-weight:600;}
+  .sched-grid .tcell{border-right:1px solid var(--border-soft); border-bottom:1px solid var(--border-soft); font-size:9px; color:var(--text-faint); text-align:right; padding:0 4px; line-height:1.1;}
+  .sched-col{position:relative; border-right:1px solid var(--border-soft); overflow:hidden;}
   .sched-block{
-    position:absolute; left:3px; right:3px; border-left:3px solid var(--c); background:#fff;
-    padding:4px 6px; font-size:11px; overflow:hidden; border-radius:5px; box-shadow:var(--shadow); border:1px solid var(--border-soft); cursor:pointer;
+    position:absolute; left:2px; right:2px; background:#fff;
+    padding:2px 4px 2px 6px; font-size:10px; overflow:hidden; border-radius:3px;
+    box-shadow:none; border:1px solid var(--border-soft); border-left:3px solid var(--c, #999); cursor:pointer;
   }
-  .sched-block .b-name{font-weight:600; font-size:11px;}
-  .sched-block .b-code{font-size:9.5px; color:var(--text-soft);}
+  .sched-block .b-name{font-weight:600; font-size:10px; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .sched-block .b-code{font-size:8.5px; color:var(--text-soft); white-space:nowrap;}
   .no-schedule-note{font-size:13px; color:var(--text-soft); margin-top:16px;}
 
   /* ---------- MODAL ---------- */
@@ -351,7 +364,6 @@
   </div>
 
   <div class="meters" id="meters"></div>
-  <div class="footnote">Liberal Arts Core is 12&nbsp;cr (writing / Texts &amp; Ideas / Cultures &amp; Contexts) after Anita's transfer waiver (Advanced Writing II waived as a non-Tisch transfer, with 4 credits shifted into Electives). The 4 distribution areas under Core are separate min-4&nbsp;cr checks. Standard IMA structure is Core 16&nbsp;cr / Electives 32&nbsp;cr — same 128&nbsp;cr total either way.</div>
 
   <div class="toolbar">
     <div class="toggle-group">
@@ -439,8 +451,9 @@
 
 <div class="overlay" id="termOverlay" style="display:none;">
   <div class="modal" style="max-width:340px;">
-    <h2>Add semester / session</h2>
+    <h2 id="termModalTitle">Add semester / session</h2>
     <form id="termForm">
+      <input type="hidden" id="termId" value="">
       <div class="field"><label>Label</label><input type="text" id="t_label" placeholder="Fall 2028" required></div>
       <div class="field"><label>Type</label>
         <select id="t_type">
@@ -451,10 +464,12 @@
         </select>
       </div>
       <div class="modal-actions">
-        <div></div>
+        <div>
+          <button type="button" class="btn ghost" id="deleteTermBtn" style="display:none;">Delete</button>
+        </div>
         <div>
           <button type="button" class="btn ghost" id="cancelTermBtn">Cancel</button>
-          <button type="submit" class="btn">Add</button>
+          <button type="submit" class="btn" id="termSaveBtn">Add</button>
         </div>
       </div>
     </form>
@@ -508,11 +523,11 @@ const DEFAULT_STATE = {
     {id:"fa25",label:"Fall 2025",type:"fall",collapsed:true},
     {id:"sp26",label:"Spring 2026",type:"spring",collapsed:true},
     {id:"fa26",label:"Fall 2026",type:"fall",collapsed:true},
-    {id:"cd3iuou1w",label:"J-Term 2027",type:"fall",collapsed:true},
+    {id:"cd3iuou1w",label:"J-Term 2027",type:"jterm",collapsed:true},
     {id:"sp27",label:"Spring 2027",type:"spring",collapsed:true},
     {id:"cmwnnqfmz",label:"Summer 2027",type:"summer",collapsed:true},
     {id:"fa27",label:"Fall 2027",type:"fall",collapsed:true},
-    {id:"ceq243jv1",label:"J-Term 2028",type:"fall",collapsed:true},
+    {id:"ceq243jv1",label:"J-Term 2028",type:"jterm",collapsed:true},
     {id:"sp28",label:"Spring 2028",type:"spring",collapsed:true}
   ],
   courses:[
@@ -603,6 +618,13 @@ function migrateState(parsed){
       }
     });
   }
+  // Fix J-Term / Summer terms that were saved with the wrong type.
+  if(Array.isArray(parsed.terms)){
+    parsed.terms.forEach(term=>{
+      if(/j-?term/i.test(term.label||'')) term.type = 'jterm';
+      else if(/^summer\b/i.test(term.label||'')) term.type = 'summer';
+    });
+  }
   return parsed;
 }
 function loadState(){
@@ -688,7 +710,8 @@ function coursesInCategory(catKey){
     });
 }
 function courseRowHtml(cs){
-  return `<div class="area-course" data-course="${cs.id}" title="Edit course">
+  const cat = CATEGORIES[cs.category];
+  return `<div class="area-course" data-course="${cs.id}" title="Edit course" style="--c:${cat?cat.color:'#999'}">
     <div class="ac-name">${cs.name}${cs.code?` <span style="color:var(--text-faint)">(${cs.code})</span>`:''}</div>
     <div class="ac-meta">${termLabel(cs.termId) || 'No semester'} · ${cs.credits} cr</div>
   </div>`;
@@ -837,16 +860,14 @@ function renderMasthead(){
   document.getElementById('overallExtra').textContent = detail + totalAll + ' cr total';
 
   const termsWithCourses = state.terms.filter(t=>state.courses.some(c=>c.termId===t.id));
-  const fallSpring = termsWithCourses.filter(t=>t.type==='fall'||t.type==='spring').length;
-  const summer = termsWithCourses.filter(t=>t.type==='summer').length;
-  const jterm = termsWithCourses.filter(t=>t.type==='jterm').length;
+  const isJterm = t => t.type==='jterm' || /j-?term/i.test(t.label||'');
+  const isSummer = t => t.type==='summer' || /^summer\b/i.test(t.label||'');
+  const fallSpring = termsWithCourses.filter(t=>!isJterm(t) && !isSummer(t) && (t.type==='fall'||t.type==='spring')).length;
+  const summer = termsWithCourses.filter(isSummer).length;
+  const jterm = termsWithCourses.filter(isJterm).length;
   document.getElementById('semCount').textContent = fallSpring;
-  const sessionParts = [];
-  if(summer) sessionParts.push(summer+' summer');
-  if(jterm) sessionParts.push(jterm+' J-term');
-  document.getElementById('semExtra').textContent = sessionParts.length
-    ? sessionParts.join(' · ') + ' session' + (summer+jterm===1?'':'s')
-    : 'No summer / J-term sessions';
+  document.getElementById('semExtra').textContent =
+    `${summer} summer · ${jterm} J-term session${summer+jterm===1?'':'s'}`;
 }
 
 function renderMeters(){
@@ -938,29 +959,23 @@ function renderSemGrid(){
   state.terms.forEach(term=>{
     const isSem = term.type==='fall'||term.type==='spring';
     const cred = termCredits(term.id);
-    let flagHtml = '';
-    if(isSem){
-      if(cred>20) flagHtml = `<span class="flag flag-danger">over max</span>`;
-      else if(cred>18) flagHtml = `<span class="flag flag-warn">overload</span>`;
-      else flagHtml = `<span class="flag flag-ok">ok</span>`;
-    }
     const card = document.createElement('div');
     card.className = 'sem-card' + (term.collapsed ? ' collapsed' : '');
     card.dataset.term = term.id;
     const courses = state.courses.filter(c=>c.termId===term.id);
     card.innerHTML = `
       <div class="sem-head" draggable="true" title="Drag to rearrange semester">
-        <button type="button" class="sem-toggle" data-toggle-term="${term.id}" title="${term.collapsed?'Expand':'Collapse'} semester" draggable="false" aria-expanded="${term.collapsed?'false':'true'}">▾</button>
+        <button type="button" class="sem-toggle" data-toggle-term="${term.id}" title="${term.collapsed?'Expand':'Collapse'} semester" draggable="false" aria-expanded="${term.collapsed?'false':'true'}"><svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 5.5L7 9.5L11 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         <span class="sem-grip" aria-hidden="true">⠿</span>
-        <div style="flex:1; min-width:0;">
+        <button type="button" class="sem-title-btn" data-edit-term="${term.id}" draggable="false" title="Edit semester">
           <h3>${term.label}</h3>
           <div class="sem-type">${isSem?'Semester':(term.type==='summer'?'Summer session':'J-term session')}${term.collapsed && courses.length?` · ${courses.length} course${courses.length===1?'':'s'}`:''}</div>
-        </div>
+        </button>
         <div style="display:flex; align-items:${term.collapsed?'center':'flex-start'}; gap:6px;">
           <div class="sem-cred">
             <div class="n">${cred}</div>
-            ${flagHtml}
           </div>
+          <button type="button" class="sem-edit" data-edit-term="${term.id}" title="Edit semester" draggable="false" aria-label="Edit semester"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 11l7-7M10 4l1 1M3 11l-1 1 1.5-.4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
           <button type="button" class="sem-remove" data-remove-term="${term.id}" title="Remove semester" draggable="false">&times;</button>
         </div>
       </div>
@@ -1007,10 +1022,37 @@ function reorderTerm(fromId, toId){
   return true;
 }
 
+function moveCourse(courseId, targetTermId, beforeCourseId){
+  const fromIdx = state.courses.findIndex(c=>c.id===courseId);
+  if(fromIdx<0) return false;
+  const [moved] = state.courses.splice(fromIdx, 1);
+  moved.termId = targetTermId;
+  if(beforeCourseId && beforeCourseId!==courseId){
+    const toIdx = state.courses.findIndex(c=>c.id===beforeCourseId);
+    if(toIdx>=0){
+      state.courses.splice(toIdx, 0, moved);
+      return true;
+    }
+  }
+  let lastIdx = -1;
+  for(let i=0;i<state.courses.length;i++){
+    if(state.courses[i].termId===targetTermId) lastIdx = i;
+  }
+  state.courses.splice(lastIdx+1, 0, moved);
+  return true;
+}
+
+function clearCourseDropStyles(){
+  document.querySelectorAll('.course-row').forEach(r=>{
+    r.classList.remove('drop-before', 'drop-after');
+  });
+}
+
 function clearTermDragStyles(){
   document.querySelectorAll('.sem-card').forEach(c=>{
     c.classList.remove('drag-over', 'term-drag-over', 'term-dragging');
   });
+  clearCourseDropStyles();
 }
 
 function attachDragHandlers(){
@@ -1028,11 +1070,51 @@ function attachDragHandlers(){
       draggedCourseId = null;
       clearTermDragStyles();
     });
+    row.addEventListener('dragover', e=>{
+      if(!draggedCourseId || draggedTermId) return;
+      e.preventDefault();
+      e.stopPropagation();
+      e.dataTransfer.dropEffect = 'move';
+      const rect = row.getBoundingClientRect();
+      const before = e.clientY < rect.top + rect.height/2;
+      row.classList.toggle('drop-before', before);
+      row.classList.toggle('drop-after', !before);
+      document.querySelectorAll('.course-row').forEach(r=>{
+        if(r!==row) r.classList.remove('drop-before', 'drop-after');
+      });
+      const card = row.closest('.sem-card');
+      if(card) card.classList.add('drag-over');
+    });
+    row.addEventListener('dragleave', e=>{
+      if(row.contains(e.relatedTarget)) return;
+      row.classList.remove('drop-before', 'drop-after');
+    });
+    row.addEventListener('drop', e=>{
+      if(!draggedCourseId && e.dataTransfer.getData('application/x-drag-kind')!=='course') return;
+      e.preventDefault();
+      e.stopPropagation();
+      const courseId = draggedCourseId || e.dataTransfer.getData('text/plain');
+      const targetTermId = row.closest('.sem-card')?.dataset.term;
+      const rect = row.getBoundingClientRect();
+      const before = e.clientY < rect.top + rect.height/2;
+      let beforeCourseId = null;
+      if(before){
+        beforeCourseId = row.dataset.course;
+      } else {
+        const next = row.nextElementSibling;
+        beforeCourseId = next && next.classList.contains('course-row') ? next.dataset.course : null;
+      }
+      clearTermDragStyles();
+      if(courseId && targetTermId && courseId!==beforeCourseId){
+        if(moveCourse(courseId, targetTermId, beforeCourseId)) render();
+      }
+      draggedCourseId = null;
+    });
   });
   document.querySelectorAll('.sem-card').forEach(card=>{
     const head = card.querySelector('.sem-head');
     head.addEventListener('dragstart', e=>{
-      if(e.target.closest('.sem-remove, .sem-toggle')){
+      if(e.target.closest('.sem-remove, .sem-toggle, .sem-edit, .sem-title-btn')){
         e.preventDefault();
         return;
       }
@@ -1075,10 +1157,8 @@ function attachDragHandlers(){
         return;
       }
       const courseId = draggedCourseId || e.dataTransfer.getData('text/plain');
-      const course = state.courses.find(c=>c.id===courseId);
-      if(course && targetTermId){
-        course.termId = targetTermId;
-        render();
+      if(courseId && targetTermId){
+        if(moveCourse(courseId, targetTermId, null)) render();
       }
       draggedCourseId = null;
     });
@@ -1106,24 +1186,36 @@ function renderSchedule(){
     container.innerHTML = `<div class="no-schedule-note">No timed courses yet for this semester. Add meeting days/times when editing a course to see it here.</div>`;
     return;
   }
-  const startHour = 8, endHour = 21;
+  // Compact weekday window: at least 8am–5pm, extends for night classes (up to 9pm)
+  const startHour = 8;
+  let endHour = 17;
+  courses.forEach(cs=>{
+    const endM = timeToRow(cs.end);
+    if(endM != null) endHour = Math.max(endHour, Math.ceil(endM / 60));
+  });
+  endHour = Math.min(21, endHour); // cap at 9pm
+  const weekDays = ["Mon","Tue","Wed","Thu","Fri"];
   const totalMin = (endHour-startHour)*60;
-  const pxPerMin = 1.6;
+  // Keep the day grid roughly one-screen tall even when evenings are included
+  const pxPerMin = Math.min(0.85, 420 / totalMin);
   let hourRows = '';
-  for(let h=startHour; h<=endHour; h++){
-    hourRows += `<div class="tcell" style="height:${60*pxPerMin}px;">${h>12?(h-12)+'pm':(h===12?'12pm':h+'am')}</div>`;
+  for(let h=startHour; h<endHour; h++){
+    const label = h>12?(h-12)+'pm':(h===12?'12pm':h+'am');
+    hourRows += `<div class="tcell" style="height:${60*pxPerMin}px;">${label}</div>`;
   }
   let cols = '';
-  DAYS.forEach(day=>{
+  weekDays.forEach(day=>{
     const dayCourses = courses.filter(c=>c.days.includes(day));
     let blocks = '';
     dayCourses.forEach(cs=>{
       const cat = CATEGORIES[cs.category];
       const sM = timeToRow(cs.start) - startHour*60;
       const eM = timeToRow(cs.end) - startHour*60;
+      if(eM <= 0 || sM >= totalMin) return; // outside visible window
       const top = Math.max(0,sM)*pxPerMin;
-      const height = Math.max(20,(eM-sM))*pxPerMin;
-      blocks += `<div class="sched-block" style="--c:${cat?cat.color:'#999'}; top:${top}px; height:${height}px;" data-course="${cs.id}">
+      const bottom = Math.min(totalMin, eM)*pxPerMin;
+      const height = Math.max(14, bottom - top);
+      blocks += `<div class="sched-block" style="--c:${cat?cat.color:'#999'}; top:${top}px; height:${height}px;" data-course="${cs.id}" title="${cs.name} (${cs.start}–${cs.end})">
         <div class="b-name">${cs.name}</div>
         <div class="b-code">${cs.start}–${cs.end}</div>
       </div>`;
@@ -1131,9 +1223,9 @@ function renderSchedule(){
     cols += `<div class="sched-col" style="height:${totalMin*pxPerMin}px;">${blocks}</div>`;
   });
   container.innerHTML = `
-    <div class="sched-grid" style="grid-template-rows:32px 1fr;">
+    <div class="sched-grid" style="grid-template-rows:24px 1fr;">
       <div class="hcell"></div>
-      ${DAYS.map(d=>`<div class="hcell">${d}</div>`).join('')}
+      ${weekDays.map(d=>`<div class="hcell">${d}</div>`).join('')}
       <div>${hourRows}</div>
       ${cols}
     </div>
@@ -1252,18 +1344,43 @@ document.getElementById('deleteCourseBtn').addEventListener('click', ()=>{
 const termOverlay = document.getElementById('termOverlay');
 document.getElementById('termForm').addEventListener('submit', e=>{
   e.preventDefault();
+  const id = document.getElementById('termId').value;
   const label = document.getElementById('t_label').value.trim();
   const type = document.getElementById('t_type').value;
-  if(label){
+  if(!label) return;
+  if(id){
+    const term = state.terms.find(t=>t.id===id);
+    if(term){
+      term.label = label;
+      term.type = type;
+    }
+  } else {
     state.terms.push({id:c(), label, type});
+  }
+  closeTermModal();
+  render();
+});
+document.getElementById('cancelTermBtn').addEventListener('click', closeTermModal);
+document.getElementById('deleteTermBtn').addEventListener('click', ()=>{
+  const id = document.getElementById('termId').value;
+  if(!id) return;
+  const hasCourses = state.courses.some(c=>c.termId===id);
+  const msg = hasCourses ? 'This semester has courses in it. Remove it and all its courses?' : 'Remove this semester?';
+  if(confirm(msg)){
+    state.courses = state.courses.filter(c=>c.termId!==id);
+    state.terms = state.terms.filter(t=>t.id!==id);
     closeTermModal();
     render();
   }
 });
-document.getElementById('cancelTermBtn').addEventListener('click', closeTermModal);
-function openTermModal(){
-  document.getElementById('t_label').value='';
-  document.getElementById('t_type').value='fall';
+function openTermModal(termId){
+  const term = termId ? state.terms.find(t=>t.id===termId) : null;
+  document.getElementById('termModalTitle').textContent = term ? 'Edit semester / session' : 'Add semester / session';
+  document.getElementById('termId').value = term ? term.id : '';
+  document.getElementById('t_label').value = term ? term.label : '';
+  document.getElementById('t_type').value = term ? term.type : 'fall';
+  document.getElementById('termSaveBtn').textContent = term ? 'Save' : 'Add';
+  document.getElementById('deleteTermBtn').style.display = term ? 'inline-block' : 'none';
   termOverlay.style.display='flex';
 }
 function closeTermModal(){ termOverlay.style.display='none'; }
@@ -1279,6 +1396,8 @@ document.getElementById('semGrid').addEventListener('click', e=>{
     }
     return;
   }
+  const editTermBtn = e.target.closest('[data-edit-term]');
+  if(editTermBtn){ openTermModal(editTermBtn.dataset.editTerm); return; }
   const addBtn = e.target.closest('[data-add-course]');
   if(addBtn){ openCourseModal(null, addBtn.dataset.addCourse); return; }
   const removeBtn = e.target.closest('[data-remove-term]');
