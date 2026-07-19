@@ -72,11 +72,7 @@
   .overall-bar .m-fill.planned{opacity:.22;}
   .overall-extra{font-size:10.5px; color:var(--text-faint); margin-top:4px; text-align:right;}
 
-  .sem-target{display:flex; align-items:center; justify-content:flex-end; gap:6px; font-size:11.5px; color:var(--text-soft); margin-top:8px;}
-  .sem-target select{font-size:12px; border:1px solid var(--border); border-radius:5px; padding:2px 5px; font-family:inherit; color:var(--text); background:#fff;}
-  .track-pill{font-size:10.5px; padding:2px 7px; border-radius:20px;}
-  .track-ok{background:var(--ok-bg); color:var(--ok);}
-  .track-over{background:var(--danger-bg); color:var(--danger);}
+  .sem-extra{font-size:10.5px; color:var(--text-faint); margin-top:4px; text-align:right;}
 
   /* ---------- REQUIREMENT GROUPS ---------- */
   .meters{
@@ -89,7 +85,6 @@
   .req-tile > summary, .req-tile > .tile-head{
     cursor:pointer; list-style:none; padding:13px 14px; display:flex; align-items:center; gap:10px;
   }
-  .req-tile.standalone > .tile-head{cursor:default;}
   .req-tile > summary::-webkit-details-marker{display:none;}
   .req-tile > summary::marker{content:"";}
   .req-tile .g-dot{width:8px; height:8px; border-radius:50%; background:var(--c); flex-shrink:0;}
@@ -105,6 +100,7 @@
   .req-tile .g-track .m-fill{height:100%; background:var(--c); position:absolute; left:0; top:0; border-radius:3px;}
   .req-tile .g-track .m-fill.inprog{background:var(--c); opacity:.45;}
   .req-tile .g-track .m-fill.planned{background:var(--c); opacity:.22;}
+  .req-tile .g-planned{font-size:10.5px; color:var(--text-faint); margin-top:5px;}
 
   .group-body{padding:12px 14px 14px; border-top:1px solid var(--border-soft); display:flex; flex-direction:column; gap:10px;}
   .child-meter{border:1px solid var(--border-soft); border-radius:8px; padding:10px 11px; background:var(--surface-2);}
@@ -118,32 +114,68 @@
   .child-meter .m-fill.inprog{background:var(--c); opacity:.45;}
   .child-meter .m-fill.planned{background:var(--c); opacity:.22;}
   .child-meter .m-extra{font-size:10px; color:var(--text-faint); margin-top:5px;}
-
-  /* ---------- AREA SUMMARY ROW (sits right under Core, combines "+X planned" with the By-area toggle) ---------- */
-  .footnote{font-size:11.5px; color:var(--text-faint); margin:14px 0 22px; line-height:1.5;}
-  .area-details{
-    border:1px solid var(--border-soft); border-radius:8px; background:var(--surface-2); overflow:hidden;
+  .child-meter .area-details{
+    margin-top:8px; border:none; border-top:1px dashed var(--border);
+    border-radius:0; background:transparent;
   }
+  /* ---------- AREA SUMMARY (nested under its parent meter) ---------- */
+  .footnote{font-size:11.5px; color:var(--text-faint); margin:14px 0 22px; line-height:1.5;}
+  .area-details{overflow:hidden;}
   .area-details > summary{
     cursor:pointer; list-style:none; display:flex; align-items:center; gap:10px;
-    padding:9px 11px; font-size:11px;
+    padding:8px 0 2px; font-size:11px;
   }
   .area-details > summary::-webkit-details-marker{display:none;}
-  .area-details .as-label{font-weight:600; color:var(--text); font-size:11.5px; white-space:nowrap;}
-  .area-details .as-planned{color:var(--text-faint); font-size:10.5px; flex:1; text-align:right;}
-  .area-details .as-toggle{display:flex; align-items:center; gap:4px; color:var(--text-soft); font-size:10.5px; flex-shrink:0;}
+  .area-details .as-planned{color:var(--text-faint); font-size:10.5px; flex:1;}
+  .area-details .as-toggle{display:flex; align-items:center; gap:4px; color:var(--text-soft); font-size:10.5px; flex-shrink:0; margin-left:auto;}
   .area-details .chevron-sm{transition:transform .15s; flex-shrink:0;}
   .area-details[open] .chevron-sm{transform:rotate(180deg);}
-  .area-body{padding:0 11px 10px;}
-  .area-details .bp-sub{font-size:10.5px; color:var(--text-faint); margin:0 0 6px; padding-top:8px; border-top:1px dashed var(--border);}
-  .area-row{display:flex; align-items:center; gap:8px; padding:4px 0;}
-  .area-name{flex:1; font-size:11.5px;}
-  .area-name .courses{display:block; font-size:10px; color:var(--text-faint); margin-top:1px;}
+  .area-body{padding:0 0 2px;}
+  .area-details .bp-sub{font-size:10.5px; color:var(--text-faint); margin:0 0 6px; padding-top:6px;}
+  .area-item{
+    border:1px solid var(--border-soft); border-radius:7px; background:#fff;
+    margin-bottom:6px; overflow:hidden;
+  }
+  .area-item:last-child{margin-bottom:0;}
+  .area-item > summary{
+    cursor:pointer; list-style:none; display:flex; align-items:center; gap:8px;
+    padding:8px 9px; font-size:11.5px;
+  }
+  .area-item > summary::-webkit-details-marker{display:none;}
+  .area-item .area-name{flex:1; min-width:0; font-weight:500;}
+  .area-item .area-hint{display:block; font-size:10px; color:var(--text-faint); font-weight:400; margin-top:1px;}
+  .area-item .chevron-sm{color:var(--text-faint); flex-shrink:0; transition:transform .15s;}
+  .area-item[open] > summary .chevron-sm{transform:rotate(180deg);}
   .area-track{width:48px; height:4px; background:var(--border); border-radius:3px; overflow:hidden; flex-shrink:0;}
   .area-track-fill{height:100%; border-radius:3px;}
   .area-credits{font-size:10.5px; width:38px; text-align:right; flex-shrink:0; color:var(--text-soft);}
   .area-ok{color:var(--ok);}
   .area-short{color:var(--warn);}
+  .area-course-list{padding:0 9px 8px; display:flex; flex-direction:column; gap:5px;}
+  .area-course-list.flush{padding:0 0 2px;}
+  .area-course{
+    display:flex; justify-content:space-between; gap:8px; align-items:baseline;
+    padding:6px 8px; border-radius:6px; background:var(--surface-2); font-size:11px;
+    cursor:pointer; border:1px solid transparent; transition:background .12s, border-color .12s;
+  }
+  .group-body > .area-course,
+  .child-meter .area-details .area-course{background:#fff;}
+  .group-body > .area-course{border:1px solid var(--border-soft);}
+  .area-course:hover{background:#f2f3f5; border-color:var(--border);}
+  .area-course .ac-name{color:var(--text); line-height:1.3; min-width:0;}
+  .area-course .ac-meta{color:var(--text-faint); font-size:10px; white-space:nowrap; flex-shrink:0;}
+  .area-empty{font-size:10.5px; color:var(--text-faint); padding:2px 9px 8px;}
+  .area-empty.flush{padding:2px 0 4px;}
+  .area-add{
+    width:100%; background:none; border:1px dashed var(--border); border-radius:6px;
+    padding:7px 8px; margin-top:2px; text-align:left; font-size:11.5px;
+    color:var(--text-soft); cursor:pointer; font-family:inherit;
+  }
+  .area-add:hover{color:var(--text); border-color:var(--text-faint); background:#fff;}
+  .area-course-list .area-add,
+  .area-item .area-add{margin:0 9px 8px;}
+  .area-course-list.flush .area-add,
+  .group-body > .area-add{margin:2px 0 0;}
 
   /* ---------- TOOLBAR ---------- */
   .toolbar{display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; flex-wrap:wrap; gap:10px;}
@@ -166,21 +198,54 @@
   /* ---------- SEMESTER GRID ---------- */
   .sem-grid{
     display:grid; grid-template-columns:repeat(auto-fill,minmax(255px,1fr)); gap:14px;
+    align-items:start;
   }
   .sem-card{
     background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
-    display:flex; flex-direction:column; transition:box-shadow .15s, border-color .15s;
+    display:flex; flex-direction:column; transition:box-shadow .15s, border-color .15s, opacity .12s;
   }
   .sem-card.drag-over{border-color:var(--text); box-shadow:0 0 0 3px rgba(22,24,29,.06);}
-  .sem-head{display:flex; justify-content:space-between; align-items:flex-start; padding:14px 14px 10px; border-bottom:1px solid var(--border-soft);}
+  .sem-card.term-dragging{opacity:.4;}
+  .sem-card.term-drag-over{border-color:var(--text); box-shadow:0 0 0 3px rgba(22,24,29,.08);}
+  .sem-card.collapsed{
+    height:fit-content; align-self:start;
+  }
+  .sem-card.collapsed .sem-head{
+    border-bottom:none;
+    padding:12px 12px;
+    align-items:center;
+  }
+  .sem-card.collapsed .sem-body{display:none;}
+  .sem-head{
+    display:flex; justify-content:space-between; align-items:flex-start; gap:8px;
+    padding:14px 14px 10px; border-bottom:1px solid var(--border-soft); cursor:grab;
+    user-select:none;
+  }
+  .sem-head:active{cursor:grabbing;}
+  .sem-head .sem-grip{
+    color:var(--text-faint); font-size:14px; line-height:1; letter-spacing:-1px;
+    user-select:none; margin-top:2px; flex-shrink:0;
+  }
+  .sem-card.collapsed .sem-grip{margin-top:0;}
   .sem-head h3{font-size:14.5px; font-weight:600;}
   .sem-head .sem-type{font-size:11px; color:var(--text-soft); margin-top:2px;}
   .sem-cred{text-align:right;}
   .sem-cred .n{font-size:17px; font-weight:600;}
   .sem-cred .flag{display:inline-block; font-size:10px; padding:1px 7px; margin-top:4px; border-radius:20px;}
+  .sem-card.collapsed .sem-cred .flag{margin-top:2px;}
   .flag-ok{background:var(--ok-bg); color:var(--ok);}
   .flag-warn{background:var(--warn-bg); color:var(--warn);}
   .flag-danger{background:var(--danger-bg); color:var(--danger);}
+  .sem-toggle{
+    width:26px; height:26px; flex-shrink:0; margin-top:0;
+    display:inline-flex; align-items:center; justify-content:center;
+    background:var(--surface-2); border:1px solid var(--border); border-radius:6px;
+    color:var(--text-soft); cursor:pointer; font-size:12px; line-height:1;
+    font-family:inherit; padding:0;
+    transition:background .12s, border-color .12s, color .12s, transform .15s;
+  }
+  .sem-toggle:hover{color:var(--text); border-color:var(--text-faint); background:#f2f3f5;}
+  .sem-card.collapsed .sem-toggle{transform:rotate(-90deg);}
 
   .course-list{list-style:none; margin:0; padding:10px 10px 6px; flex:1; min-height:24px;}
   .course-row{
@@ -273,26 +338,20 @@
     <div class="stats">
       <div class="stat-block">
         <div class="num"><span id="overallHave">0</span><small> / <span id="overallNeed">128</span> credits</small></div>
-        <div class="label">Earned + in progress</div>
+        <div class="label">Credits taken</div>
         <div class="overall-bar" id="overallBar" style="--c:var(--text)"></div>
         <div class="overall-extra" id="overallExtra"></div>
       </div>
       <div class="stat-block">
         <div class="num" id="semCount">0</div>
-        <div class="label">Semesters used</div>
-        <div class="sem-target">target
-          <select id="semTargetSelect">
-            <option value="6">6</option>
-            <option value="7">7</option>
-          </select>
-          <span class="track-pill" id="semTrack"></span>
-        </div>
+        <div class="label">Fall &amp; Spring semesters</div>
+        <div class="sem-extra" id="semExtra"></div>
       </div>
     </div>
   </div>
 
   <div class="meters" id="meters"></div>
-  <div class="footnote">Liberal Arts Core/Electives above reflect Anita's approved transfer waiver (Advanced Writing II waived as a non-Tisch transfer, with 4 credits shifted from Core into Electives). Standard IMA structure is Core 16&nbsp;cr / Electives 32&nbsp;cr — same 128&nbsp;cr total either way.</div>
+  <div class="footnote">Liberal Arts Core is 12&nbsp;cr (writing / Texts &amp; Ideas / Cultures &amp; Contexts) after Anita's transfer waiver (Advanced Writing II waived as a non-Tisch transfer, with 4 credits shifted into Electives). The 4 distribution areas under Core are separate min-4&nbsp;cr checks. Standard IMA structure is Core 16&nbsp;cr / Electives 32&nbsp;cr — same 128&nbsp;cr total either way.</div>
 
   <div class="toolbar">
     <div class="toggle-group">
@@ -412,7 +471,7 @@ const CATEGORIES = {
   free_elective:  {label:"Free Electives",           needed:20, color:"var(--free)"}
 };
 
-// Parent groupings shown as collapsible dropdowns; free_elective stays standalone.
+// Parent groupings shown as collapsible dropdowns; free_elective expands to its course list.
 const GROUPS = {
   ima:  {label:"IMA Major Requirements", color:"var(--core)", children:["ima_core","ima_major","ima_elective"]},
   las:  {label:"Liberal Arts & Sciences", color:"var(--las-elective)", children:["las_core","las_elective"]}
@@ -420,10 +479,11 @@ const GROUPS = {
 
 // Sub-requirement areas that live inside a broader category.
 // IMA Major Distribution needs a minimum of 4 credits in each of 6 areas (24cr total).
-// LAS Electives need at least 1 course in each of 4 areas, with the rest open (per NYU CAS/IMA program page).
+// LAS Core credit pool is 12cr (writing / Texts & Ideas / Cultures & Contexts, with AWII waiver).
+// The 4 distribution areas are tracked under Core in the UI (min 4cr each) but are separate from that 12cr pool.
 const SUBCATS = {
   ima_major: ["Design & Fabrication","Media Arts","Physical Computing","Programming & Data","Project Development & Research","Tech & Society"],
-  las_elective: ["Quantitative Reasoning","Physical or Life Science","Societies & the Social Sciences","Expressive Culture"]
+  las_core: ["Quantitative Reasoning","Physical or Life Science","Societies & the Social Sciences","Expressive Culture"]
 };
 
 // Real course options pulled from NYU IMA's program structure page, used as name suggestions.
@@ -443,72 +503,114 @@ const COURSE_CATALOG = {
 function c(){ return 'c'+Math.random().toString(36).slice(2,10); }
 
 const DEFAULT_STATE = {
-  student:{name:"Anita Yan", program:"BFA Interactive Media Arts · Psychology Minor · NYU Tisch", semTarget:6},
+  student:{name:"Anita Yan",program:"BFA Interactive Media Arts · Psychology Minor · NYU Tisch",semTarget:6},
   terms:[
-    {id:"fa25", label:"Fall 2025",  type:"fall"},
-    {id:"sp26", label:"Spring 2026",type:"spring"},
-    {id:"su26", label:"Summer 2026",type:"summer"},
-    {id:"fa26", label:"Fall 2026",  type:"fall"},
-    {id:"ja27", label:"J-Term 2027",type:"jterm"},
-    {id:"sp27", label:"Spring 2027",type:"spring"},
-    {id:"fa27", label:"Fall 2027",  type:"fall"},
-    {id:"sp28", label:"Spring 2028",type:"spring"}
+    {id:"fa25",label:"Fall 2025",type:"fall",collapsed:true},
+    {id:"sp26",label:"Spring 2026",type:"spring",collapsed:true},
+    {id:"fa26",label:"Fall 2026",type:"fall",collapsed:true},
+    {id:"cd3iuou1w",label:"J-Term 2027",type:"fall",collapsed:true},
+    {id:"sp27",label:"Spring 2027",type:"spring",collapsed:true},
+    {id:"cmwnnqfmz",label:"Summer 2027",type:"summer",collapsed:true},
+    {id:"fa27",label:"Fall 2027",type:"fall",collapsed:true},
+    {id:"ceq243jv1",label:"J-Term 2028",type:"fall"},
+    {id:"sp28",label:"Spring 2028",type:"spring",collapsed:true}
   ],
   courses:[
-    {id:c(), code:"FIRST-UG 441", name:"First-Year Writing Seminar", credits:4, category:"las_core", termId:"fa25", status:"completed"},
-    {id:c(), code:"CSCI-UA 2",    name:"Introduction to Computer Programming", credits:4, category:"las_elective", subcategory:"Quantitative Reasoning", termId:"fa25", status:"completed"},
-    {id:c(), code:"APSY-UE 19",   name:"Intro to Personality Theories", credits:4, category:"las_elective", subcategory:"Societies & the Social Sciences", termId:"fa25", status:"completed"},
-    {id:c(), code:"FIRST-UG 150", name:"First-Year Interdisciplinary Seminar", credits:4, category:"free_elective", termId:"fa25", status:"completed"},
-    {id:c(), code:"IMNY-UT 1",    name:"Code! (Pass/Fail)", credits:2, category:"free_elective", termId:"fa25", status:"completed"},
+    {id:c(),code:"FIRST-UG 441",name:"First-Year Writing Seminar",credits:4,category:"las_core",termId:"fa25",status:"completed"},
 
-    {id:c(), code:"IMNY-UT 99",  name:"IMA Cohort: Community is a Practice", credits:0, category:"ima_core", termId:"sp26", status:"completed"},
-    {id:c(), code:"IMNY-UT 101", name:"Creative Computing", credits:4, category:"ima_core", termId:"sp26", status:"completed"},
-    {id:c(), code:"IMNY-UT 102", name:"Communications Lab", credits:4, category:"ima_core", termId:"sp26", status:"completed"},
-    {id:c(), code:"",            name:"Intro to Assistive Tech", credits:2, category:"ima_elective", termId:"sp26", status:"completed"},
-    {id:c(), code:"PSYCH-UA 1",  name:"Intro to Psychology", credits:4, category:"las_elective", termId:"sp26", status:"completed"},
-    {id:c(), code:"FIRST-UG 1",  name:"First-Year Research Seminar", credits:0, category:"free_elective", termId:"sp26", status:"completed"},
-    {id:c(), code:"FIRST-UG 841",name:"First-Year Research Seminar", credits:4, category:"free_elective", termId:"sp26", status:"completed"},
+    {id:c(),code:"CSCI-UA 2",name:"Introduction to Computer Programming",credits:4,category:"las_core",subcategory:"Quantitative Reasoning",termId:"fa25",status:"completed"},
 
-    {id:c(), code:"", name:"Intro to Sociology", credits:4, category:"las_elective", termId:"su26", status:"in-progress"},
-    {id:c(), code:"", name:"Topics in Physical Computing: Adapting Everyday Things", credits:2, category:"ima_elective", termId:"su26", status:"in-progress"},
+    {id:c(),code:"APSY-UE 19",name:"Intro to Personality Theories",credits:4,category:"las_core",subcategory:"Societies & the Social Sciences",termId:"fa25",status:"completed"},
 
-    {id:c(), code:"IMNY-UT 262", name:"User Experience Design", credits:4, category:"ima_major", subcategory:"Design & Fabrication", termId:"fa26", status:"planned"},
-    {id:c(), code:"IMNY-UT 288", name:"Methods of Motion", credits:4, category:"ima_major", subcategory:"Media Arts", termId:"fa26", status:"planned"},
-    {id:c(), code:"", name:"Topics in Design: Design Research", credits:4, category:"ima_elective", termId:"fa26", status:"planned"},
-    {id:c(), code:"", name:"Social Psychology", credits:4, category:"las_elective", termId:"fa26", status:"planned"},
-    {id:c(), code:"", name:"Internship", credits:4, category:"free_elective", termId:"fa26", status:"planned"},
+    {id:c(),code:"FIRST-UG 150",name:"First-Year Interdisciplinary Seminar",credits:4,category:"free_elective",termId:"fa25",status:"completed"},
 
-    {id:c(), code:"", name:"Marketing", credits:4, category:"free_elective", termId:"ja27", status:"planned"},
-    {id:c(), code:"", name:"IMA Elective (TBD)", credits:2, category:"ima_elective", termId:"ja27", status:"planned"},
+    {id:c(),code:"IMNY-UT 1",name:"Code! (Pass/Fail)",credits:2,category:"free_elective",termId:"fa25",status:"completed"},
 
-    {id:c(), code:"IMNY-UT 253", name:"Interaction as Art Medium", credits:4, category:"ima_major", subcategory:"Physical Computing", termId:"sp27", status:"planned"},
-    {id:c(), code:"IMNY-UT 223", name:"Networked Media", credits:4, category:"ima_major", subcategory:"Programming & Data", termId:"sp27", status:"planned"},
-    {id:c(), code:"", name:"IMA Elective (TBD)", credits:4, category:"ima_elective", termId:"sp27", status:"planned"},
-    {id:c(), code:"", name:"IMA Elective (TBD)", credits:2, category:"ima_elective", termId:"sp27", status:"planned"},
-    {id:c(), code:"", name:"Psychology Elective (TBD)", credits:4, category:"las_elective", termId:"sp27", status:"planned"},
-    {id:c(), code:"", name:"Internship", credits:2, category:"free_elective", termId:"sp27", status:"planned"},
+    {id:c(),code:"IMNY-UT 99",name:"IMA Cohort: Community is a Practice",credits:0,category:"ima_core",termId:"sp26",status:"completed"},
 
-    {id:c(), code:"IMNY-UT 205", name:"Creative Approaches to Emerging Media", credits:4, category:"ima_major", subcategory:"Project Development & Research", termId:"fa27", status:"planned"},
-    {id:c(), code:"IMNY-UT 260", name:"Design Skills for Responsible Media", credits:4, category:"ima_major", subcategory:"Tech & Society", termId:"fa27", status:"planned"},
-    {id:c(), code:"", name:"IMA Elective (TBD)", credits:4, category:"ima_elective", termId:"fa27", status:"planned"},
-    {id:c(), code:"", name:"Cultures & Contexts: China", credits:4, category:"las_core", termId:"fa27", status:"planned"},
-    {id:c(), code:"", name:"Psychology Elective (TBD)", credits:4, category:"las_elective", termId:"fa27", status:"planned"},
+    {id:c(),code:"IMNY-UT 101",name:"Creative Computing",credits:4,category:"ima_core",termId:"sp26",status:"completed"},
 
-    {id:c(), code:"", name:"Texts & Ideas", credits:4, category:"las_core", termId:"sp28", status:"planned"},
-    {id:c(), code:"", name:"IMA Elective (TBD)", credits:4, category:"ima_elective", termId:"sp28", status:"planned"},
-    {id:c(), code:"", name:"Studio Art", credits:4, category:"las_elective", subcategory:"Expressive Culture", termId:"sp28", status:"planned"},
-    {id:c(), code:"", name:"Physical or Life Science Elective (TBD)", credits:4, category:"las_elective", subcategory:"Physical or Life Science", termId:"sp28", status:"planned"},
-    {id:c(), code:"IMNY-UT 400", name:"Capstone Studio", credits:4, category:"ima_core", termId:"sp28", status:"planned"}
+    {id:c(),code:"IMNY-UT 102",name:"Communications Lab",credits:4,category:"ima_core",termId:"sp26",status:"completed"},
+
+    {id:c(),code:"",name:"Intro to Assistive Tech",credits:2,category:"ima_elective",termId:"sp26",status:"completed"},
+
+    {id:c(),code:"PSYCH-UA 1",name:"Intro to Psychology",credits:4,category:"las_elective",termId:"sp26",status:"completed"},
+
+    {id:c(),code:"FIRST-UG 1",name:"First-Year Research Seminar",credits:0,category:"free_elective",termId:"sp26",status:"completed"},
+
+    {id:c(),code:"FIRST-UG 841",name:"First-Year Research Seminar",credits:4,category:"free_elective",termId:"sp26",status:"completed"},
+
+    {id:c(),code:"IMNY-UT 262",name:"Networked Media",credits:4,category:"ima_major",subcategory:"Programming & Data",termId:"fa26",status:"in-progress",days:["Tue", "Thu"],start:"14:00",end:"14:30"},
+
+    {id:c(),code:"IMNY-UT 288",name:"Methods of Motion",credits:4,category:"ima_major",subcategory:"Media Arts",termId:"fa26",status:"planned"},
+
+    {id:c(),code:"",name:"Topics in Design: Design Research",credits:4,category:"ima_elective",termId:"fa26",status:"planned"},
+
+    {id:c(),code:"",name:"Social Psychology",credits:4,category:"las_elective",termId:"fa26",status:"planned"},
+
+    {id:c(),code:"IMNY-UT 253",name:"Interaction as Art Medium",credits:4,category:"ima_major",subcategory:"Physical Computing",termId:"sp27",status:"planned"},
+
+    {id:c(),code:"IMNY-UT 223",name:"Networked Media",credits:4,category:"ima_major",subcategory:"Programming & Data",termId:"sp27",status:"planned"},
+
+    {id:c(),code:"",name:"IMA Elective (TBD)",credits:4,category:"ima_elective",termId:"sp27",status:"planned"},
+
+    {id:c(),code:"",name:"IMA Elective (TBD)",credits:2,category:"ima_elective",termId:"sp27",status:"planned"},
+
+    {id:c(),code:"",name:"Psychology Elective (TBD)",credits:4,category:"las_elective",termId:"sp27",status:"planned"},
+
+    {id:c(),code:"IMNY-UT 205",name:"Creative Approaches to Emerging Media",credits:4,category:"ima_major",subcategory:"Project Development & Research",termId:"fa27",status:"planned"},
+
+    {id:c(),code:"IMNY-UT 260",name:"Design Skills for Responsible Media",credits:4,category:"ima_major",subcategory:"Tech & Society",termId:"fa27",status:"planned"},
+
+    {id:c(),code:"",name:"IMA Elective (TBD)",credits:4,category:"ima_elective",termId:"fa27",status:"planned"},
+
+    {id:c(),code:"",name:"Texts & Ideas",credits:4,category:"las_core",termId:"sp28",status:"planned"},
+
+    {id:c(),code:"",name:"IMA Elective (TBD)",credits:2,category:"ima_elective",termId:"sp28",status:"planned"},
+
+    {id:c(),code:"",name:"Studio Art",credits:4,category:"las_core",subcategory:"Expressive Culture",termId:"sp28",status:"planned"},
+
+    {id:c(),code:"",name:"Physical or Life Science Elective (TBD)",credits:4,category:"las_core",subcategory:"Physical or Life Science",termId:"sp28",status:"planned"},
+
+    {id:c(),code:"IMNY-UT 400",name:"Capstone Studio",credits:4,category:"ima_core",termId:"sp28",status:"planned"},
+
+    {id:c(),code:"",name:"Topics in Design: Adapting Everyday Objects",credits:2,category:"ima_elective",termId:"fa26",status:"in-progress",days:["Mon"],start:"17:30",end:"19:15"},
+
+    {id:c(),code:"",name:"IMA Elective",credits:4,category:"las_elective",termId:"fa27",status:"planned"},
+
+    {id:c(),code:"IMA Elective",name:"IMA Elective",credits:2,category:"ima_elective",termId:"fa27",status:"planned"},
+
+    {id:c(),code:"",name:"Liberal Elective",credits:4,category:"las_elective",termId:"cd3iuou1w",status:"planned"},
+
+    {id:c(),code:"",name:"Free Elective 1 - Outside NYU",credits:4,category:"free_elective",termId:"cmwnnqfmz",status:"planned"},
+
+    {id:c(),code:"",name:"Free Elective 2 - Outside NYU",credits:4,category:"free_elective",termId:"cmwnnqfmz",status:"planned"},
+
+    {id:c(),code:"",name:"Liberal Art Elective",credits:4,category:"las_elective",termId:"cmwnnqfmz",status:"planned"},
+
+    {id:c(),code:"",name:"Cognition",credits:4,category:"las_core",termId:"cmwnnqfmz",status:"planned"}
   ]
 };
 
 const STORAGE_KEY = 'gradPlannerState_v1';
+const LAS_CORE_AREAS = ["Quantitative Reasoning","Physical or Life Science","Societies & the Social Sciences","Expressive Culture"];
+function migrateState(parsed){
+  // Older saves put LAS distribution areas under Electives — keep them under Core.
+  if(Array.isArray(parsed.courses)){
+    parsed.courses.forEach(course=>{
+      if(course.category==='las_elective' && LAS_CORE_AREAS.includes(course.subcategory)){
+        course.category = 'las_core';
+      }
+    });
+  }
+  return parsed;
+}
 function loadState(){
   try{
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if(raw){
       const parsed = JSON.parse(raw);
-      if(parsed && parsed.terms && parsed.courses && parsed.student) return parsed;
+      if(parsed && parsed.terms && parsed.courses && parsed.student) return migrateState(parsed);
     }
   }catch(err){ /* localStorage unavailable (e.g. sandboxed preview) — fall back to in-memory only */ }
   return JSON.parse(JSON.stringify(DEFAULT_STATE));
@@ -521,14 +623,21 @@ function persistState(){
 let state = loadState();
 let currentView = 'grid';
 let draggedCourseId = null;
+let draggedTermId = null;
 
 const DAYS = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
 
 function termCredits(termId){
   return state.courses.filter(c=>c.termId===termId).reduce((s,c)=>s+Number(c.credits||0),0);
 }
-function categoryEarned(catKey){
-  return state.courses.filter(c=>c.category===catKey).reduce((acc,c)=>{
+function categoryEarned(catKey, opts){
+  const excludeLasCoreAreas = opts && opts.excludeLasCoreAreas;
+  return state.courses.filter(c=>{
+    if(c.category!==catKey) return false;
+    // Core's 12cr pool excludes the 4 distribution-area courses (shown separately under By area).
+    if(excludeLasCoreAreas && catKey==='las_core' && LAS_CORE_AREAS.includes(c.subcategory)) return false;
+    return true;
+  }).reduce((acc,c)=>{
     if(c.status==='completed') acc.done += Number(c.credits||0);
     else if(c.status==='in-progress') acc.prog += Number(c.credits||0);
     else acc.plan += Number(c.credits||0);
@@ -562,33 +671,117 @@ function updateSaveStatus(saved){
   }
 }
 
+function termLabel(termId){
+  const t = state.terms.find(x=>x.id===termId);
+  return t ? t.label : '';
+}
+function termIndex(termId){
+  return state.terms.findIndex(t=>t.id===termId);
+}
+function coursesInCategory(catKey){
+  return state.courses
+    .filter(c=>c.category===catKey)
+    .slice()
+    .sort((a,b)=>{
+      const ti = termIndex(a.termId) - termIndex(b.termId);
+      return ti !== 0 ? ti : String(a.name||'').localeCompare(String(b.name||''));
+    });
+}
+function courseRowHtml(cs){
+  return `<div class="area-course" data-course="${cs.id}" title="Edit course">
+    <div class="ac-name">${cs.name}${cs.code?` <span style="color:var(--text-faint)">(${cs.code})</span>`:''}</div>
+    <div class="ac-meta">${termLabel(cs.termId) || 'No semester'} · ${cs.credits} cr</div>
+  </div>`;
+}
+function escapeAttr(s){
+  return String(s)
+    .replace(/&/g,'&amp;')
+    .replace(/"/g,'&quot;')
+    .replace(/</g,'&lt;');
+}
+function addCourseBtnHtml(catKey, subcategory){
+  const subAttr = subcategory ? ` data-add-subcategory="${escapeAttr(subcategory)}"` : '';
+  const label = subcategory ? `+ Add course to ${escapeAttr(subcategory)}` : '+ Add course';
+  return `<button type="button" class="area-add" data-add-course-cat="${escapeAttr(catKey)}"${subAttr}>${label}</button>`;
+}
+function chevronSmHtml(){
+  return `<svg class="chevron-sm" width="10" height="10" viewBox="0 0 14 14" fill="none"><path d="M3 5.5L7 9.5L11 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+}
+function creditTotalLine(done, prog, plan){
+  const total = done + prog + plan;
+  const parts = [];
+  if(prog) parts.push(prog+' in progress');
+  if(plan) parts.push(plan+' planned');
+  const detail = parts.length ? parts.join(' · ') + ' · ' : '';
+  return detail + total + ' cr total';
+}
+function coursesEarned(courses){
+  return courses.reduce((acc,c)=>{
+    const n = Number(c.credits||0);
+    if(c.status==='completed') acc.done += n;
+    else if(c.status==='in-progress') acc.prog += n;
+    else acc.plan += n;
+    return acc;
+  },{done:0,prog:0,plan:0});
+}
+function categoryCoursesHtml(catKey, wasOpen){
+  const courses = coursesInCategory(catKey);
+  const e = categoryEarned(catKey);
+  const list = courses.length
+    ? `<div class="area-course-list flush">${courses.map(courseRowHtml).join('')}${addCourseBtnHtml(catKey)}</div>`
+    : `<div class="area-empty flush">No courses in this category yet.</div>${addCourseBtnHtml(catKey)}`;
+  return `<details class="area-details" data-courses-cat="${catKey}" ${wasOpen?'open':''}>
+    <summary>
+      <span class="as-planned">${creditTotalLine(e.done, e.prog, e.plan)}</span>
+      <span class="as-toggle">Courses ${chevronSmHtml()}</span>
+    </summary>
+    <div class="area-body">
+      <div class="bp-sub">${courses.length} course${courses.length===1?'':'s'} — click to edit</div>
+      ${list}
+    </div>
+  </details>`;
+}
+
 function areaSummaryRowHtml(catKey, wasOpen){
   const areas = SUBCATS[catKey];
   if(!areas) return '';
   const cat = CATEGORIES[catKey];
-  const e = categoryEarned(catKey);
+  const inAreas = state.courses.filter(c=>c.category===catKey && areas.includes(c.subcategory));
+  const eAreas = coursesEarned(inAreas);
+  const chevron = chevronSmHtml();
   const rows = areas.map(area=>{
-    const matching = state.courses.filter(c=>c.category===catKey && c.subcategory===area);
-    const credits = matching.reduce((s,c)=>s+Number(c.credits||0),0);
+    const matching = state.courses
+      .filter(c=>c.category===catKey && c.subcategory===area)
+      .slice()
+      .sort((a,b)=>termIndex(a.termId)-termIndex(b.termId));
+    const ae = coursesEarned(matching);
+    const credits = ae.done + ae.prog + ae.plan;
     const pct = Math.min(100, credits/4*100);
     const ok = credits>=4;
-    const names = matching.map(c=>c.name).join(', ');
-    return `<div class="area-row">
-      <div class="area-name">${area}${names?`<span class="courses">${names}</span>`:''}</div>
-      <div class="area-track"><div class="area-track-fill" style="width:${pct}%; background:${cat.color};"></div></div>
-      <div class="area-credits ${ok?'area-ok':'area-short'}">${credits}/4</div>
-    </div>`;
+    const courseCount = matching.length;
+    const hint = courseCount
+      ? `${creditTotalLine(ae.done, ae.prog, ae.plan)} · expand for courses`
+      : '0 cr total — expand to add';
+    const courseList = courseCount
+      ? `<div class="area-course-list">${matching.map(courseRowHtml).join('')}${addCourseBtnHtml(catKey, area)}</div>`
+      : `<div class="area-empty">Nothing assigned to this area yet.</div>${addCourseBtnHtml(catKey, area)}`;
+    return `<details class="area-item">
+      <summary>
+        <div class="area-name">${area}<span class="area-hint">${hint}</span></div>
+        <div class="area-track"><div class="area-track-fill" style="width:${pct}%; background:${cat.color};"></div></div>
+        <div class="area-credits ${ok?'area-ok':'area-short'}">${credits}/4</div>
+        ${chevron}
+      </summary>
+      ${courseList}
+    </details>`;
   }).join('');
   return `<details class="area-details" data-cat="${catKey}" ${wasOpen?'open':''} style="--c:${cat.color}">
     <summary>
-      <span class="as-label">${cat.label}</span>
-      <span class="as-planned">${e.plan?('+'+e.plan+' cr planned'):''}</span>
-      <span class="as-toggle">By area
-        <svg class="chevron-sm" width="10" height="10" viewBox="0 0 14 14" fill="none"><path d="M3 5.5L7 9.5L11 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </span>
+      <span class="as-planned">${creditTotalLine(eAreas.done, eAreas.prog, eAreas.plan)}</span>
+      <span class="as-toggle">By area ${chevron}</span>
     </summary>
     <div class="area-body">
-      <div class="bp-sub">Minimum 4 credits in each area</div>
+      <div class="bp-sub">Minimum 4 credits in each area — expand an area to see or add courses</div>
       ${rows}
     </div>
   </details>`;
@@ -605,16 +798,21 @@ function trackFillsHtml(done, prog, plan, needed){
   `;
 }
 
-function childMeterHtml(key, skipExtra){
+function childMeterHtml(key, wasOpenArea, wasOpenCourses){
   const cat = CATEGORIES[key];
-  const e = categoryEarned(key);
+  const e = categoryEarned(key, {excludeLasCoreAreas: key==='las_core'});
+  const hasAreas = !!SUBCATS[key];
+  const dropdownHtml = hasAreas
+    ? areaSummaryRowHtml(key, wasOpenArea)
+    : categoryCoursesHtml(key, wasOpenCourses);
   return `<div class="child-meter" style="--c:${cat.color}">
     <div class="m-label"><span class="m-dot"></span>${cat.label}</div>
     <div class="m-nums"><span class="have">${e.done+e.prog}</span><span class="need">/ ${cat.needed} cr</span></div>
     <div class="m-track">
       ${trackFillsHtml(e.done, e.prog, e.plan, cat.needed)}
     </div>
-    ${skipExtra ? '' : `<div class="m-extra">${e.plan?('+'+e.plan+' cr planned'):''}</div>`}
+    <div class="m-extra">${creditTotalLine(e.done, e.prog, e.plan)}</div>
+    ${dropdownHtml}
   </div>`;
 }
 
@@ -628,17 +826,27 @@ function renderMasthead(){
     else totalPlan+=Number(c.credits||0);
   });
   const need = Object.values(CATEGORIES).reduce((s,x)=>s+x.needed,0);
-  document.getElementById('overallHave').textContent = totalDone+totalProg;
+  const totalAll = totalDone + totalProg + totalPlan;
+  document.getElementById('overallHave').textContent = totalDone;
   document.getElementById('overallNeed').textContent = need;
   document.getElementById('overallBar').innerHTML = trackFillsHtml(totalDone, totalProg, totalPlan, need);
-  document.getElementById('overallExtra').textContent = totalPlan ? ('+'+totalPlan+' cr planned') : '';
+  const parts = [];
+  if(totalProg) parts.push(totalProg+' in progress');
+  if(totalPlan) parts.push(totalPlan+' planned');
+  const detail = parts.length ? parts.join(' · ') + ' · ' : '';
+  document.getElementById('overallExtra').textContent = detail + totalAll + ' cr total';
 
-  const semTerms = state.terms.filter(t=>(t.type==='fall'||t.type==='spring') && state.courses.some(c=>c.termId===t.id));
-  document.getElementById('semCount').textContent = semTerms.length;
-  document.getElementById('semTargetSelect').value = state.student.semTarget;
-  const track = document.getElementById('semTrack');
-  if(semTerms.length<=state.student.semTarget){ track.textContent='on track'; track.className='track-pill track-ok'; }
-  else { track.textContent='over target'; track.className='track-pill track-over'; }
+  const termsWithCourses = state.terms.filter(t=>state.courses.some(c=>c.termId===t.id));
+  const fallSpring = termsWithCourses.filter(t=>t.type==='fall'||t.type==='spring').length;
+  const summer = termsWithCourses.filter(t=>t.type==='summer').length;
+  const jterm = termsWithCourses.filter(t=>t.type==='jterm').length;
+  document.getElementById('semCount').textContent = fallSpring;
+  const sessionParts = [];
+  if(summer) sessionParts.push(summer+' summer');
+  if(jterm) sessionParts.push(jterm+' J-term');
+  document.getElementById('semExtra').textContent = sessionParts.length
+    ? sessionParts.join(' · ') + ' session' + (summer+jterm===1?'':'s')
+    : 'No summer / J-term sessions';
 }
 
 function renderMeters(){
@@ -646,7 +854,9 @@ function renderMeters(){
   const wasOpenGroup = {};
   wrap.querySelectorAll('.req-tile[open]').forEach(d=>{ wasOpenGroup[d.dataset.group] = d.open; });
   const wasOpenArea = {};
-  wrap.querySelectorAll('.area-details').forEach(d=>{ wasOpenArea[d.dataset.cat] = d.open; });
+  wrap.querySelectorAll('.area-details[data-cat]').forEach(d=>{ wasOpenArea[d.dataset.cat] = d.open; });
+  const wasOpenCourses = {};
+  wrap.querySelectorAll('.area-details[data-courses-cat]').forEach(d=>{ wasOpenCourses[d.dataset.coursesCat] = d.open; });
   wrap.innerHTML='';
 
   Object.entries(GROUPS).forEach(([gKey, group])=>{
@@ -669,41 +879,48 @@ function renderMeters(){
           <div class="g-label">${group.label}</div>
           <div class="g-sub">${group.children.map(k=>CATEGORIES[k].label).join(' · ')}</div>
           <div class="g-track">${trackFillsHtml(done, prog, plan, needed)}</div>
+          <div class="g-planned">${creditTotalLine(done, prog, plan)}</div>
         </div>
         <div class="g-nums">${have}<small> / ${needed} cr</small></div>
         <svg class="chevron" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5.5L7 9.5L11 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </summary>
       <div class="group-body">
-        ${(() => {
-          const [coreKey, ...rest] = group.children;
-          const areaRows = rest.filter(k=>SUBCATS[k]).map(k=>areaSummaryRowHtml(k, wasOpenArea[k])).join('');
-          const restMeters = rest.map(k=>childMeterHtml(k, !!SUBCATS[k])).join('');
-          return childMeterHtml(coreKey, false) + areaRows + restMeters;
-        })()}
+        ${group.children.map(k=>childMeterHtml(k, wasOpenArea[k], wasOpenCourses[k])).join('')}
       </div>
     `;
     wrap.appendChild(details);
   });
 
-  // Free Electives — same tile styling as the two groups above, just no dropdown to expand
+  // Free Electives — expand the tile itself to list courses (no subcategories)
   const catKey = 'free_elective';
   const cat = CATEGORIES[catKey];
   const e = categoryEarned(catKey);
   const needed = cat.needed;
   const have = e.done+e.prog;
-  const standalone = document.createElement('div');
-  standalone.className = 'req-tile standalone';
+  const freeCourses = coursesInCategory(catKey);
+  const freeList = freeCourses.length
+    ? freeCourses.map(courseRowHtml).join('') + addCourseBtnHtml(catKey)
+    : `<div class="area-empty flush">No free electives yet.</div>${addCourseBtnHtml(catKey)}`;
+  const standalone = document.createElement('details');
+  standalone.className = 'req-tile';
+  standalone.dataset.group = 'free';
+  if(wasOpenGroup.free) standalone.open = true;
   standalone.style.setProperty('--c', cat.color);
   standalone.innerHTML = `
-    <div class="tile-head">
+    <summary>
       <span class="g-dot"></span>
       <div class="g-info">
         <div class="g-label">${cat.label}</div>
         <div class="g-sub">General credits from any department</div>
         <div class="g-track">${trackFillsHtml(e.done, e.prog, e.plan, needed)}</div>
+        <div class="g-planned">${creditTotalLine(e.done, e.prog, e.plan)}</div>
       </div>
       <div class="g-nums">${have}<small> / ${needed} cr</small></div>
-      <span class="chevron-spacer"></span>
+      <svg class="chevron" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5.5L7 9.5L11 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </summary>
+    <div class="group-body">
+      <div class="bp-sub" style="margin:0 0 8px; padding:0; border:none;">${freeCourses.length} course${freeCourses.length===1?'':'s'} — click to edit</div>
+      ${freeList}
     </div>
   `;
   wrap.appendChild(standalone);
@@ -728,38 +945,42 @@ function renderSemGrid(){
       else flagHtml = `<span class="flag flag-ok">ok</span>`;
     }
     const card = document.createElement('div');
-    card.className = 'sem-card';
+    card.className = 'sem-card' + (term.collapsed ? ' collapsed' : '');
     card.dataset.term = term.id;
     const courses = state.courses.filter(c=>c.termId===term.id);
     card.innerHTML = `
-      <div class="sem-head">
-        <div>
+      <div class="sem-head" draggable="true" title="Drag to rearrange semester">
+        <button type="button" class="sem-toggle" data-toggle-term="${term.id}" title="${term.collapsed?'Expand':'Collapse'} semester" draggable="false" aria-expanded="${term.collapsed?'false':'true'}">▾</button>
+        <span class="sem-grip" aria-hidden="true">⠿</span>
+        <div style="flex:1; min-width:0;">
           <h3>${term.label}</h3>
-          <div class="sem-type">${isSem?'Semester':(term.type==='summer'?'Summer session':'J-term session')}</div>
+          <div class="sem-type">${isSem?'Semester':(term.type==='summer'?'Summer session':'J-term session')}${term.collapsed && courses.length?` · ${courses.length} course${courses.length===1?'':'s'}`:''}</div>
         </div>
-        <div style="display:flex; align-items:flex-start; gap:6px;">
+        <div style="display:flex; align-items:${term.collapsed?'center':'flex-start'}; gap:6px;">
           <div class="sem-cred">
             <div class="n">${cred}</div>
             ${flagHtml}
           </div>
-          <button class="sem-remove" data-remove-term="${term.id}" title="Remove semester">&times;</button>
+          <button type="button" class="sem-remove" data-remove-term="${term.id}" title="Remove semester" draggable="false">&times;</button>
         </div>
       </div>
-      <ul class="course-list" data-dropzone="${term.id}">
-        ${courses.map(cs=>{
-          const cat = CATEGORIES[cs.category];
-          return `<li class="course-row ${cs.status}" draggable="true" style="--c:${cat?cat.color:'#999'}" data-course="${cs.id}">
-            <div class="cr-dot"></div>
-            <div class="cr-body">
-              ${cs.code?`<div class="cr-code">${cs.code}</div>`:''}
-              <div class="cr-name">${cs.name}</div>
-              <div class="cr-status">${statusBadge(cs)} · ${cs.category?categoryFullLabel(cs.category):''}</div>
-            </div>
-            <div class="cr-credits">${cs.credits}</div>
-          </li>`;
-        }).join('')}
-      </ul>
-      <button class="sem-add" data-add-course="${term.id}">+ Add course</button>
+      <div class="sem-body">
+        <ul class="course-list" data-dropzone="${term.id}">
+          ${courses.map(cs=>{
+            const cat = CATEGORIES[cs.category];
+            return `<li class="course-row ${cs.status}" draggable="true" style="--c:${cat?cat.color:'#999'}" data-course="${cs.id}">
+              <div class="cr-dot"></div>
+              <div class="cr-body">
+                ${cs.code?`<div class="cr-code">${cs.code}</div>`:''}
+                <div class="cr-name">${cs.name}</div>
+                <div class="cr-status">${statusBadge(cs)} · ${cs.category?categoryFullLabel(cs.category):''}</div>
+              </div>
+              <div class="cr-credits">${cs.credits}</div>
+            </li>`;
+          }).join('')}
+        </ul>
+        <button class="sem-add" data-add-course="${term.id}">+ Add course</button>
+      </div>
     `;
     grid.appendChild(card);
   });
@@ -772,38 +993,94 @@ function renderSemGrid(){
   attachDragHandlers();
 }
 
+function reorderTerm(fromId, toId){
+  if(!fromId || !toId || fromId===toId) return false;
+  const fromIdx = state.terms.findIndex(t=>t.id===fromId);
+  if(fromIdx<0) return false;
+  const [moved] = state.terms.splice(fromIdx, 1);
+  const toIdx = state.terms.findIndex(t=>t.id===toId);
+  if(toIdx<0){
+    state.terms.splice(fromIdx, 0, moved);
+    return false;
+  }
+  state.terms.splice(toIdx, 0, moved);
+  return true;
+}
+
+function clearTermDragStyles(){
+  document.querySelectorAll('.sem-card').forEach(c=>{
+    c.classList.remove('drag-over', 'term-drag-over', 'term-dragging');
+  });
+}
+
 function attachDragHandlers(){
   document.querySelectorAll('.course-row').forEach(row=>{
     row.addEventListener('dragstart', e=>{
       draggedCourseId = row.dataset.course;
+      draggedTermId = null;
       row.classList.add('dragging');
       e.dataTransfer.effectAllowed = 'move';
       e.dataTransfer.setData('text/plain', row.dataset.course);
+      e.dataTransfer.setData('application/x-drag-kind', 'course');
     });
     row.addEventListener('dragend', ()=>{
       row.classList.remove('dragging');
       draggedCourseId = null;
+      clearTermDragStyles();
     });
   });
   document.querySelectorAll('.sem-card').forEach(card=>{
+    const head = card.querySelector('.sem-head');
+    head.addEventListener('dragstart', e=>{
+      if(e.target.closest('.sem-remove, .sem-toggle')){
+        e.preventDefault();
+        return;
+      }
+      draggedTermId = card.dataset.term;
+      draggedCourseId = null;
+      card.classList.add('term-dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', card.dataset.term);
+      e.dataTransfer.setData('application/x-drag-kind', 'term');
+    });
+    head.addEventListener('dragend', ()=>{
+      draggedTermId = null;
+      clearTermDragStyles();
+    });
     card.addEventListener('dragover', e=>{
       e.preventDefault();
       e.dataTransfer.dropEffect = 'move';
-      card.classList.add('drag-over');
+      if(draggedTermId){
+        if(draggedTermId !== card.dataset.term) card.classList.add('term-drag-over');
+        card.classList.remove('drag-over');
+      } else {
+        card.classList.add('drag-over');
+        card.classList.remove('term-drag-over');
+      }
     });
-    card.addEventListener('dragleave', ()=>{
-      card.classList.remove('drag-over');
+    card.addEventListener('dragleave', e=>{
+      if(card.contains(e.relatedTarget)) return;
+      card.classList.remove('drag-over', 'term-drag-over');
     });
     card.addEventListener('drop', e=>{
       e.preventDefault();
-      card.classList.remove('drag-over');
-      const courseId = draggedCourseId || e.dataTransfer.getData('text/plain');
       const targetTermId = card.dataset.term;
+      const kind = e.dataTransfer.getData('application/x-drag-kind');
+      const isTermDrag = draggedTermId || kind === 'term';
+      clearTermDragStyles();
+      if(isTermDrag){
+        const fromId = draggedTermId || e.dataTransfer.getData('text/plain');
+        if(reorderTerm(fromId, targetTermId)) render();
+        draggedTermId = null;
+        return;
+      }
+      const courseId = draggedCourseId || e.dataTransfer.getData('text/plain');
       const course = state.courses.find(c=>c.id===courseId);
       if(course && targetTermId){
         course.termId = targetTermId;
         render();
       }
+      draggedCourseId = null;
     });
   });
 }
@@ -912,19 +1189,20 @@ function refreshCourseNameSuggestions(){
 document.getElementById('f_category').addEventListener('change', ()=>refreshSubcategoryField());
 document.getElementById('f_subcategory').addEventListener('change', refreshCourseNameSuggestions);
 
-function openCourseModal(courseId, defaultTermId){
+function openCourseModal(courseId, defaultTermId, defaults){
   populateCategorySelect();
   populateTermSelect();
   const course = courseId ? state.courses.find(c=>c.id===courseId) : null;
+  const preset = defaults || {};
   document.getElementById('courseModalTitle').textContent = course ? 'Edit course' : 'Add course';
   document.getElementById('courseId').value = course ? course.id : '';
   document.getElementById('f_code').value = course ? course.code||'' : '';
   document.getElementById('f_name').value = course ? course.name||'' : '';
   document.getElementById('f_credits').value = course ? course.credits : 4;
-  document.getElementById('f_category').value = course ? course.category : 'ima_elective';
-  document.getElementById('f_term').value = course ? course.termId : (defaultTermId||state.terms[0].id);
+  document.getElementById('f_category').value = course ? course.category : (preset.category || 'ima_elective');
+  document.getElementById('f_term').value = course ? course.termId : (defaultTermId || preset.termId || state.terms[0].id);
   document.getElementById('f_status').value = course ? course.status : 'planned';
-  refreshSubcategoryField(course ? course.subcategory : '');
+  refreshSubcategoryField(course ? course.subcategory : (preset.subcategory || ''));
   populateDaysCheck(course ? course.days : []);
   document.getElementById('f_start').value = course && course.start ? course.start : '';
   document.getElementById('f_end').value = course && course.end ? course.end : '';
@@ -992,6 +1270,15 @@ function closeTermModal(){ termOverlay.style.display='none'; }
 
 /* ---------------- DELEGATED CLICKS ---------------- */
 document.getElementById('semGrid').addEventListener('click', e=>{
+  const toggleBtn = e.target.closest('[data-toggle-term]');
+  if(toggleBtn){
+    const term = state.terms.find(t=>t.id===toggleBtn.dataset.toggleTerm);
+    if(term){
+      term.collapsed = !term.collapsed;
+      render();
+    }
+    return;
+  }
   const addBtn = e.target.closest('[data-add-course]');
   if(addBtn){ openCourseModal(null, addBtn.dataset.addCourse); return; }
   const removeBtn = e.target.closest('[data-remove-term]');
@@ -1011,6 +1298,24 @@ document.getElementById('semGrid').addEventListener('click', e=>{
   if(e.target.id==='addSemCard'){ openTermModal(); return; }
 });
 
+document.getElementById('meters').addEventListener('click', e=>{
+  const addBtn = e.target.closest('[data-add-course-cat]');
+  if(addBtn){
+    e.preventDefault();
+    e.stopPropagation();
+    openCourseModal(null, null, {
+      category: addBtn.dataset.addCourseCat,
+      subcategory: addBtn.dataset.addSubcategory || ''
+    });
+    return;
+  }
+  const courseEl = e.target.closest('.area-course[data-course]');
+  if(courseEl){
+    e.preventDefault();
+    openCourseModal(courseEl.dataset.course);
+  }
+});
+
 /* ---------------- VIEW TOGGLE ---------------- */
 document.querySelectorAll('.toggle-group button').forEach(btn=>{
   btn.addEventListener('click', ()=>{
@@ -1023,11 +1328,6 @@ document.querySelectorAll('.toggle-group button').forEach(btn=>{
   });
 });
 document.getElementById('schedTermSelect').addEventListener('change', renderSchedule);
-document.getElementById('semTargetSelect').addEventListener('change', e=>{
-  state.student.semTarget = Number(e.target.value);
-  renderMasthead();
-});
-
 /* ---------------- EXPORT / IMPORT ---------------- */
 document.getElementById('exportBtn').addEventListener('click', ()=>{
   const blob = new Blob([JSON.stringify(state,null,2)], {type:'application/json'});
@@ -1049,7 +1349,7 @@ document.getElementById('importInput').addEventListener('change', e=>{
     try{
       const parsed = JSON.parse(evt.target.result);
       if(parsed.terms && parsed.courses && parsed.student){
-        state = parsed;
+        state = migrateState(parsed);
         render();
       } else {
         alert('This file does not look like a graduation-plan export.');
